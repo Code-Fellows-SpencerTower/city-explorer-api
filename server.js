@@ -14,12 +14,24 @@ app.use(cors()); // acts as middleware - intermediary between server and request
 
 app.get('/weather', handleGetWeather);
 
+
+
 function handleGetWeather(request, response) {
-  // sends weather array and 200 (ok) response
+  // sends weather array and 200 (ok) .status(200) response
+  console.log(request.query);
+  // let newForecast = weatherData.map(location => new Forecast(location));
+  // sends back datetime
   response.status(200).send(weatherData);
   // with status
 }
 
+// class Forecast {
+//   constructor(object) {
+//     this.date = object.datetime;
+//     this.description = object.description;
+
+//   }
+// }
 
 
 // turn on server
