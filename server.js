@@ -10,8 +10,10 @@ const weatherData = require('./data/weather.json');
 const app = express(); // gives back return value
 app.use(cors()); // acts as middleware - intermediary between server and requests
 
-
+// opens up a route for /weather, calls handleGetWeather when route recieves query
 app.get('/weather', handleGetWeather);
+// send error back to client if page not found
+app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
 // turn on server
 app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001'));
 
@@ -20,8 +22,6 @@ async function handleGetWeather(req, res) {
   // set up endpoint to accept city_name as param
   let city_name = req.query.city_name;
   //let cities_in_data = ['Seattle', 'Paris', 'Ammon'];
-  // check the 3 data objects to see if query is in them
-  // refactor
   let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
   console.log('city_match', city_match);
 
@@ -34,10 +34,10 @@ async function handleGetWeather(req, res) {
 
   } else {
     // if not found, send error to client
-    const cityLiveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
+    const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
     // makes new property on weather object for searched city
-    weatherData[cityLiveWeather.data.city_name] = cityLiveWeather.data;
-    console.log(cityLiveWeather);
+    weatherData[liveWeather.data.city_name] = liveWeather.data;
+    console.log(liveWeather);
     res.status(400).send(`${city_name} not found.`);
   }
 

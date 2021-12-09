@@ -13,7 +13,7 @@ Express server to query weather data from Weatherbit
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
-Technologies: Javascript, express
+Technologies: Javascript, express, weatherbit API
 
 ## Change Log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
@@ -22,6 +22,14 @@ Technologies: Javascript, express
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+Jacob Choi
+Kellen Linse
+
+## Lab 07
+
+### Data Flow
+
+![Lab 07 Data Flow](img/lab07_dataflow.png)
 
 Name of feature: server setup
 
@@ -33,7 +41,7 @@ Finish time: 6pm
 
 Actual time needed to complete: 1hr
 
-Name of feature: ________________________________
+Name of feature: Weather
 
 Estimate of time needed to complete: _____
 
@@ -41,4 +49,20 @@ Start time: _____
 
 Finish time: _____
 
-Actual time needed to complete: _____
+Actual time needed to complete: 
+
+## Lab 08
+
+### Data Flow
+
+![Lab 08 Data Flow](img/lab08_dataflow.png)
+
+Name of feature: Weather (live)
+
+Estimate of time needed to complete: 3 hrs
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: 
