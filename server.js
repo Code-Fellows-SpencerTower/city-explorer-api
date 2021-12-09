@@ -2,38 +2,58 @@
 
 // not using import, using require instead
 // requires/imports express
+require('dotenv').config(); // lets you use env file
+const axios = require('axios');
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // lets you use env file
 const weatherData = require('./data/weather.json');
-
 const app = express(); // gives back return value
-console.log(app);
-
 app.use(cors()); // acts as middleware - intermediary between server and requests
 
+
 app.get('/weather', handleGetWeather);
-
-
-
-function handleGetWeather(request, response) {
-  // sends weather array and 200 (ok) .status(200) response
-  console.log(request.query);
-  // let newForecast = weatherData.map(location => new Forecast(location));
-  // sends back datetime
-  response.status(200).send(weatherData);
-  // with status
-}
-
-// class Forecast {
-//   constructor(object) {
-//     this.date = object.datetime;
-//     this.description = object.description;
-
-//   }
-// }
-
-
 // turn on server
 app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001'));
+
+
+async function handleGetWeather(req, res) {
+  // set up endpoint to accept city_name as param
+  let city_name = req.query.city_name;
+  //let cities_in_data = ['Seattle', 'Paris', 'Ammon'];
+  // check the 3 data objects to see if query is in them
+  // refactor
+  let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
+  console.log('city_match', city_match);
+
+  if (city_match) {
+    // map to Forecast, returns obj with datetime and description as properties
+    const resWeatherData = city_match.data.map(day => new Forecast(day));
+    // send city weather data description to client
+    // console.log(resWeatherData);
+    res.status(200).send(resWeatherData);
+
+  } else {
+    // if not found, send error to client
+    const cityLiveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
+    // makes new property on weather object for searched city
+    weatherData[cityLiveWeather.data.city_name] = cityLiveWeather.data;
+    console.log(cityLiveWeather);
+    res.status(400).send(`${city_name} not found.`);
+  }
+
+
+  // let newForecast = weatherData.map(location => new Forecast(location));
+  // sends back datetime
+}
+
+class Forecast {
+  constructor(object) {
+    this.date = object.datetime;
+    this.description = `High of ${object.max_temp}, Low of ${object.low_temp}, with ${object.weather.description}`;
+
+  }
+}
+
+
+
 
