@@ -20,20 +20,21 @@ app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001
 
 async function handleGetWeather(req, res) {
   // set up endpoint to accept city_name as param
+  console.log(req.query);
   let city_name = req.query.city_name;
+  console.log(city_name);
   //let cities_in_data = ['Seattle', 'Paris', 'Ammon'];
   let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
   console.log('city_match', city_match);
 
   if (city_match) {
     // map to Forecast, returns obj with datetime and description as properties
-    const resWeatherData = city_match.data.map(day => new Forecast(day));
+    const resForecast = city_match.data.map(day => new Forecast(day));
     // send city weather data description to client
-    // console.log(resWeatherData);
-    res.status(200).send(resWeatherData);
+    console.log(resForecast);
+    res.status(200).send(resForecast);
 
   } else {
-    // if not found, send error to client
     const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
     // makes new property on weather object for searched city
     weatherData[liveWeather.data.city_name] = liveWeather.data;
