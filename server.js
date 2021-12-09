@@ -21,30 +21,30 @@ app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001
 async function handleGetWeather(req, res) {
   // set up endpoint to accept city_name as param
   console.log(req.query);
-  let city_name = req.query.city_name;
-  console.log(city_name);
-  //let cities_in_data = ['Seattle', 'Paris', 'Ammon'];
-  let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
-  console.log('city_match', city_match);
+  // let city_name = req.query.city_name;
+  // let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
+  // console.log('city_match', city_match);
 
-  if (city_match) {
+  try {
     // map to Forecast, returns obj with datetime and description as properties
-    const resForecast = city_match.data.map(day => new Forecast(day));
-    // send city weather data description to client
-    console.log(resForecast);
-    res.status(200).send(resForecast);
-
-  } else {
     const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
-    // makes new property on weather object for searched city
-    weatherData[liveWeather.data.city_name] = liveWeather.data;
-    console.log(liveWeather);
-    res.status(400).send(`${city_name} not found.`);
+    console.log(liveWeather.data);
+    const liveWeatherRes = liveWeather.data.data.map(day => new Forecast(day));
+    // send city weather data description to client
+    res.status(200).send(liveWeatherRes);
+  } catch (error) {
+    // How to send api error back to client??
+    // if (liveWeather.status_code) {
+    //   res.send(`Error: ${liveWeather.status_code}. ${liveWeather.status_message}.`);
+    // }
+    // Change message
+    res.status(400).send(`${req.query.city_name} not found`);
+    // how to catch api error and send back to client?
   }
+}
 
-
-  // let newForecast = weatherData.map(location => new Forecast(location));
-  // sends back datetime
+async function handleGetMovie(req, res) {
+  const
 }
 
 class Forecast {
