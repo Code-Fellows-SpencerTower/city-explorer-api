@@ -10,8 +10,9 @@ const weatherData = require('./data/weather.json');
 const app = express(); // gives back return value
 app.use(cors()); // acts as middleware - intermediary between server and requests
 
-// opens up a route for /weather, calls handleGetWeather when route recieves query
+// open route for weather
 app.get('/weather', handleGetWeather);
+// open route for movies
 app.get('/movies', handleGetMovie);
 // send error back to client if page not found
 app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
@@ -20,27 +21,18 @@ app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001
 
 
 async function handleGetWeather(req, res) {
-  // set up endpoint to accept city_name as param
+
   console.log(req.query);
-  // let city_name = req.query.city_name;
-  // let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
-  // console.log('city_match', city_match);
 
   try {
-    // map to Forecast, returns obj with datetime and description as properties
     const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`);
     console.log(liveWeather.data);
     const liveWeatherRes = liveWeather.data.data.map(day => new Forecast(day));
     // send city weather data description to client
     res.status(200).send(liveWeatherRes);
   } catch (error) {
-    // How to send api error back to client??
-    // if (liveWeather.status_code) {
-    //   res.send(`Error: ${liveWeather.status_code}. ${liveWeather.status_message}.`);
-    // }
-    // Change message
+
     res.status(400).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
-    // how to catch api error and send back to client?
   }
 }
 
@@ -72,16 +64,8 @@ class Movie {
     this.total_votes = obj.vote_count;
     this.img_url = obj.poster_path ? `https://image.tmdb.org/t/p/w500${obj.poster_path}` : 'https://www.lacinefest.org/uploads/2/6/7/4/26743637/no-poster_orig.jpeg';
     this.popularity = obj.popularity;
-    this.release_date = obj.released_on;
+    this.release_date = obj.release_date;
   }
 }
-
-// "title": "Sleepless in Seattle",
-// "overview": "A young boy who tries to set his dad up on a date after the death of his mother. He calls into a radio station to talk about his dad’s loneliness which soon leads the dad into meeting a Journalist Annie who flies to Seattle to write a story about the boy and his dad. Yet Annie ends up with more than just a story in this popular romantic comedy.",
-// "average_votes": "6.60",
-// "total_votes": "881",
-// "image_url": "https://image.tmdb.org/t/p/w500/afkYP15OeUOD0tFEmj6VvejuOcz.jpg",
-// "popularity": "8.2340",
-// "released_on": "1993-06-24"
 
 
