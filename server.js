@@ -12,6 +12,7 @@ app.use(cors()); // acts as middleware - intermediary between server and request
 
 // opens up a route for /weather, calls handleGetWeather when route recieves query
 app.get('/weather', handleGetWeather);
+app.get('/movies', handleGetMovie);
 // send error back to client if page not found
 app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
 // turn on server
@@ -44,7 +45,7 @@ async function handleGetWeather(req, res) {
 }
 
 async function handleGetMovie(req, res) {
-  const
+  const movieData = await.axios.get()
 }
 
 class Forecast {
