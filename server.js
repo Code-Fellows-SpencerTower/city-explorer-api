@@ -28,7 +28,7 @@ async function handleGetWeather(req, res) {
 
   try {
     // map to Forecast, returns obj with datetime and description as properties
-    const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
+    const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`);
     console.log(liveWeather.data);
     const liveWeatherRes = liveWeather.data.data.map(day => new Forecast(day));
     // send city weather data description to client
@@ -45,7 +45,7 @@ async function handleGetWeather(req, res) {
 }
 
 async function handleGetMovie(req, res) {
-  const movieData = await.axios.get()
+  const movieData = await axios.get()
 }
 
 class Forecast {
