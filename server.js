@@ -69,8 +69,8 @@ class Movie {
     this.title = obj.original_title;
     this.overview = obj.overview;
     this.avg_votes = obj.vote_average;
-    this.total_votes = obj.vote_counts;
-    this.img_url = obj.poster_path ? `https://image.tmdb.org/t/p/w500/${obj.poster_path}` : 'https://www.lacinefest.org/uploads/2/6/7/4/26743637/no-poster_orig.jpeg';
+    this.total_votes = obj.vote_count;
+    this.img_url = obj.poster_path ? `https://image.tmdb.org/t/p/w500${obj.poster_path}` : 'https://www.lacinefest.org/uploads/2/6/7/4/26743637/no-poster_orig.jpeg';
     this.popularity = obj.popularity;
     this.release_date = obj.released_on;
   }
