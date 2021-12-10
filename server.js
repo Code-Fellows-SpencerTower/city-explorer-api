@@ -52,7 +52,7 @@ async function handleGetMovie(req, res) {
     console.log(movieRes);
     res.status(200).send(movieRes);
   } catch (error) {
-    res.status(400).send(`There was an error retrieving movie data for ${req.query.city_name}.`);
+    res.status(500).send(`There was server error retrieving movie data for ${req.query.city_name}.`);
   }
 }
 
@@ -66,11 +66,11 @@ class Forecast {
 
 class Movie {
   constructor(obj) {
-    this.title = obj.title;
+    this.title = obj.original_title;
     this.overview = obj.overview;
-    this.avg_votes = obj.average_votes;
-    this.total_votes = obj.total_votes;
-    this.img_url = obj.image_url;
+    this.avg_votes = obj.vote_average;
+    this.total_votes = obj.vote_counts;
+    this.img_url = obj.poster_path ? `https://image.tmdb.org/t/p/w500/${obj.poster_path}` : 'https://www.lacinefest.org/uploads/2/6/7/4/26743637/no-poster_orig.jpeg';
     this.popularity = obj.popularity;
     this.release_date = obj.released_on;
   }
