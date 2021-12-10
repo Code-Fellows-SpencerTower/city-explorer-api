@@ -45,14 +45,21 @@ async function handleGetWeather(req, res) {
 }
 
 async function handleGetMovie(req, res) {
-  const movieData = await axios.get()
+  const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}& query=${req.query.city_name}`);
+
 }
 
 class Forecast {
   constructor(object) {
     this.date = object.datetime;
-    this.description = `High of ${object.max_temp}, Low of ${object.low_temp}, with ${object.weather.description}`;
+    this.description = `High of ${object.max_temp}, Low of ${object.low_temp}, with ${object.weather.description} `;
 
+  }
+}
+
+class Movie {
+  constructor(object) {
+    this.
   }
 }
 
