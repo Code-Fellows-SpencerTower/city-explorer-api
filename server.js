@@ -39,30 +39,48 @@ async function handleGetWeather(req, res) {
     //   res.send(`Error: ${liveWeather.status_code}. ${liveWeather.status_message}.`);
     // }
     // Change message
-    res.status(400).send(`${req.query.city_name} not found`);
+    res.status(400).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
     // how to catch api error and send back to client?
   }
 }
 
 async function handleGetMovie(req, res) {
-  const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}& query=${req.query.city_name}`);
-
+  try {
+    const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}& query=${req.query.city_name}`);
+    // map into new Movie obj, put in variable to send back to client
+    const movieRes = movieData.data.map(movie => new Movie(movie));
+    res.status(200).send(movieRes);
+  } catch (error) {
+    res.status(400).send(`There was an error retrieving movie data for ${req.query.city_name}.`);
+  }
 }
 
 class Forecast {
-  constructor(object) {
-    this.date = object.datetime;
-    this.description = `High of ${object.max_temp}, Low of ${object.low_temp}, with ${object.weather.description} `;
+  constructor(obj) {
+    this.date = obj.datetime;
+    this.description = `High of ${obj.max_temp}, Low of ${obj.low_temp}, with ${obj.weather.description} `;
 
   }
 }
 
 class Movie {
-  constructor(object) {
-    this.
+  constructor(obj) {
+    this.title = obj.title;
+    this.overview = obj.overview;
+    this.avg_votes = obj.average_votes;
+    this.total_votes = obj.total_votes;
+    this.img_url = obj.image_url;
+    this.popularity = obj.popularity;
+    this.release_date = obj.released_on;
   }
 }
 
-
+    // "title": "Sleepless in Seattle",
+    // "overview": "A young boy who tries to set his dad up on a date after the death of his mother. He calls into a radio station to talk about his dad’s loneliness which soon leads the dad into meeting a Journalist Annie who flies to Seattle to write a story about the boy and his dad. Yet Annie ends up with more than just a story in this popular romantic comedy.",
+    // "average_votes": "6.60",
+    // "total_votes": "881",
+    // "image_url": "https://image.tmdb.org/t/p/w500/afkYP15OeUOD0tFEmj6VvejuOcz.jpg",
+    // "popularity": "8.2340",
+    // "released_on": "1993-06-24"
 
 
