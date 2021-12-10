@@ -46,7 +46,7 @@ async function handleGetWeather(req, res) {
 
 async function handleGetMovie(req, res) {
   try {
-    const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}& query=${req.query.city_name}`);
+    const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${req.query.city_name}&adult=false`);
     // map into new Movie obj, put in variable to send back to client
     const movieRes = movieData.data.map(movie => new Movie(movie));
     res.status(200).send(movieRes);
