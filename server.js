@@ -10,8 +10,10 @@ const weatherData = require('./data/weather.json');
 const app = express(); // gives back return value
 app.use(cors()); // acts as middleware - intermediary between server and requests
 
-// opens up a route for /weather, calls handleGetWeather when route recieves query
+// open route for weather
 app.get('/weather', handleGetWeather);
+// open route for movies
+app.get('/movies', handleGetMovie);
 // send error back to client if page not found
 app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
 // turn on server
@@ -19,42 +21,51 @@ app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001
 
 
 async function handleGetWeather(req, res) {
-  // set up endpoint to accept city_name as param
+
   console.log(req.query);
-  let city_name = req.query.city_name;
-  console.log(city_name);
-  //let cities_in_data = ['Seattle', 'Paris', 'Ammon'];
-  let city_match = weatherData.find(city => city.city_name.toLowerCase() === city_name.toLowerCase());
-  console.log('city_match', city_match);
 
-  if (city_match) {
-    // map to Forecast, returns obj with datetime and description as properties
-    const resForecast = city_match.data.map(day => new Forecast(day));
+  try {
+    const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`);
+    console.log(liveWeather.data);
+    const liveWeatherRes = liveWeather.data.data.map(day => new Forecast(day));
     // send city weather data description to client
-    console.log(resForecast);
-    res.status(200).send(resForecast);
+    res.status(200).send(liveWeatherRes);
+  } catch (error) {
 
-  } else {
-    const liveWeather = await axios.get(`http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I`);
-    // makes new property on weather object for searched city
-    weatherData[liveWeather.data.city_name] = liveWeather.data;
-    console.log(liveWeather);
-    res.status(400).send(`${city_name} not found.`);
+    res.status(400).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
   }
+}
 
-
-  // let newForecast = weatherData.map(location => new Forecast(location));
-  // sends back datetime
+async function handleGetMovie(req, res) {
+  try {
+    const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${req.query.city_name}&adult=false`);
+    // map into new Movie obj, put in variable to send back to client
+    const movieRes = movieData.data.results.map(movie => new Movie(movie));
+    console.log(movieRes);
+    res.status(200).send(movieRes);
+  } catch (error) {
+    res.status(500).send(`There was server error retrieving movie data for ${req.query.city_name}.`);
+  }
 }
 
 class Forecast {
-  constructor(object) {
-    this.date = object.datetime;
-    this.description = `High of ${object.max_temp}, Low of ${object.low_temp}, with ${object.weather.description}`;
+  constructor(obj) {
+    this.date = obj.datetime;
+    this.description = `High of ${obj.max_temp}, Low of ${obj.low_temp}, with ${obj.weather.description} `;
 
   }
 }
 
-
+class Movie {
+  constructor(obj) {
+    this.title = obj.original_title;
+    this.overview = obj.overview;
+    this.avg_votes = obj.vote_average;
+    this.total_votes = obj.vote_count;
+    this.img_url = obj.poster_path ? `https://image.tmdb.org/t/p/w500${obj.poster_path}` : 'https://www.lacinefest.org/uploads/2/6/7/4/26743637/no-poster_orig.jpeg';
+    this.popularity = obj.popularity;
+    this.release_date = obj.release_date;
+  }
+}
 
 
