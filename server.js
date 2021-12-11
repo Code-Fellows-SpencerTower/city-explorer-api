@@ -5,7 +5,6 @@
 require('dotenv').config(); // lets you use env file
 const express = require('express');
 const cors = require('cors');
-const weatherData = require('./data/weather.json');
 const app = express(); // gives back return value
 app.use(cors()); // acts as middleware - intermediary between server and requests
 const handleGetWeather = require('./routeHandlers/weather');
