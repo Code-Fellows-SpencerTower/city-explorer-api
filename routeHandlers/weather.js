@@ -1,5 +1,7 @@
 'use strict';
 
+const axios = require('axios');
+
 async function handleGetWeather(req, res) {
 
   console.log(req.query);
