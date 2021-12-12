@@ -66,3 +66,9 @@ Start time: _____
 Finish time: _____
 
 Actual time needed to complete: 
+
+## Lab 09
+
+## Lab 10
+
+![Lab 10 Data Flow](img/lab10_dataflow.png)
