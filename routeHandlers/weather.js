@@ -6,10 +6,10 @@ const cache = require('../cache');
 // refactor to check query and recieve lat, lon
 async function getWeatherData(lat, lon) {
 
-  // probably need to refactor
   const key = 'weather-' + lat + lon;
   const weatherbitUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`;
 
+  console.log('cache: ', cache);
   // check if data for query is in cache and up to date
   if (cache[key] && (Date.now() - cache[key].timestamp < 50000)) {
     console.log('Cache data found');
@@ -19,8 +19,8 @@ async function getWeatherData(lat, lon) {
     cache[key].timestamp = Date.now(); // add current date/time to timestamp in cache
     cache[key].data = parseWeatherData(await axios.get(weatherbitUrl)); // get current data from weatherbit
     // console.log('Axios Weather Data: ', await axios.get(weatherbitUrl));
-    console.log('cache[key].data: ', cache);
-    console.log('cache[key].data: ', cache[key].data);
+    // console.log('cache[key].data: ', cache);
+    // console.log('cache[key].data: ', cache[key].data);
   }
 
   return cache[key].data;
