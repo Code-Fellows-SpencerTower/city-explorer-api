@@ -1,15 +1,14 @@
 'use strict';
 
 const axios = require('axios');
-
+const cache = require('./cache');
 
 // refactor to check query and recieve lat, lon
-async function handleGetWeather(req, res) {
+async function getWeatherData(req, res) {
 
   const weatherbitUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.lat}&lon=${req.query.lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`;
 
   try {
-    const
     const liveWeather = await axios.get(weatherbitUrl);
     console.log(liveWeather.data);
     const liveWeatherRes = liveWeather.data.data.map(day => new Forecast(day));
@@ -36,5 +35,5 @@ class Forecast {
   }
 }
 
-module.exports = handleGetWeather;
+module.exports = getWeatherData;
 
