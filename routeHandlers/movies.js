@@ -4,10 +4,10 @@ const axios = require('axios');
 const cache = require('../cache');
 
 // refactor to check query and recieve lat, lon
-async function getMovieData(lat, lon) {
+async function getMovieData(city_name) {
 
-  const key = 'movie-' + lat + lon;
-  const moviedbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${req.query.city_name}&adult=false`;
+  const key = 'movie-' + city_name;
+  const moviedbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${city_name}&adult=false`;
 
   console.log('cache: ', cache);
   // check if data for query is in cache and up to date
@@ -27,7 +27,8 @@ async function getMovieData(lat, lon) {
 }
 
 function parseMovieData(movieData) {
-  const movie = movieData.data.data.map(day => new Movie(day));
+  const movie = movieData.data.results.map(day => new Movie(day));
+  console.log('parsedMovie: ', movie);
   return movie;
 }
 
