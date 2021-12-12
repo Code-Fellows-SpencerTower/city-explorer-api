@@ -7,7 +7,7 @@ async function handleGetMovie(req, res) {
     const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${req.query.city_name}&adult=false`);
     // map into new Movie obj, put in variable to send back to client
     const movieRes = movieData.data.results.map(movie => new Movie(movie));
-    console.log(movieRes);
+    // console.log(movieRes);
     res.status(200).send(movieRes);
   } catch (error) {
     res.status(500).send(`There was server error retrieving movie data for ${req.query.city_name}.`);

@@ -18,15 +18,20 @@ app.get('/movies', handleGetMovie);
 // send error back to client if page not found
 app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
 // turn on server
-app.listen(process.env.PORT, () => console.log('server is listening on PORT 3001'));
+app.listen(process.env.PORT, () => console.log(`server is listening on ${process.env.PORT}`));
 
 // handle req from client, pass to weather.js, send res to client
-function weatherReqHandler(req, res) {
+async function weatherReqHandler(req, res) {
   // assign lat lon from query to variables
-  const { lat, lon } = req.query;
-  // pass lat and lon into getWeather() in weather.js to get data from cache or new axios request
-  const weatherData = getWeatherData(lat, lon);
-  res.status(200).send(weatherData);
-  // add error handler
+  try {
+    const { lat, lon } = req.query;
+    // pass lat and lon into getWeather() in weather.js to get data from cache or new axios request
+    const weatherData = await getWeatherData(lat, lon);
+    console.log('weatherData: ', weatherData);
+    res.status(200).send(weatherData);
+  } catch (error) {
+    // add error handler
+    res.status(500).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
+  }
 }
 
