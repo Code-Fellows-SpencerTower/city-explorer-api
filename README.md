@@ -66,3 +66,19 @@ Start time: _____
 Finish time: _____
 
 Actual time needed to complete: 
+
+## Lab 09
+
+## Lab 10
+
+![Lab 10 Data Flow](img/lab10_dataflow.png)
+
+Name of feature: Cache
+
+Estimate of time needed to complete: 2hrs
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
