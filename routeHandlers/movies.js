@@ -10,8 +10,8 @@ async function getMovieData(city_name) {
   const moviedbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${city_name}&adult=false`;
 
   console.log('cache: ', cache);
-  // check if data for query is in cache and up to date
-  if (cache[key] && (Date.now() - cache[key].timestamp < 50000)) {
+  // check if data for query is in cache and up to date by 1 day
+  if (cache[key] && (Date.now() - cache[key].timestamp < (3600 * 1000 * 24))) {
     console.log('Cache data found');
   } else { // get new data via axios from movie db, parse, and update cache
     console.log('No cache data found');
