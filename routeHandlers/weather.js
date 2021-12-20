@@ -9,7 +9,6 @@ async function getWeatherData(lat, lon) {
   const key = 'weather-' + lat + lon;
   const weatherbitUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&units=I&days=7`;
 
-  console.log('cache: ', cache);
   // check if data for query is in cache and up to date
   if (cache[key] && (Date.now() - cache[key].timestamp < 50000)) {
     console.log('Cache data found');
@@ -18,9 +17,6 @@ async function getWeatherData(lat, lon) {
     cache[key] = {}; // add obj to key in cache
     cache[key].timestamp = Date.now(); // add current date/time to timestamp in cache
     cache[key].data = parseWeatherData(await axios.get(weatherbitUrl)); // get current data from weatherbit
-    // console.log('Axios Weather Data: ', await axios.get(weatherbitUrl));
-    // console.log('cache[key].data: ', cache);
-    // console.log('cache[key].data: ', cache[key].data);
   }
 
   return cache[key].data;
@@ -32,6 +28,19 @@ function parseWeatherData(weatherData) {
   return forecast;
 }
 
+// handle req from client, pass to weather.js, send res to client
+async function weatherReqHandler(req, res) {
+  try {
+    // assign lat lon from query to variables
+    const { lat, lon } = req.query;
+    // pass lat and lon into getWeather() in weather.js to get data from cache or new axios request
+    const weatherData = await getWeatherData(lat, lon);
+    res.status(200).send(weatherData);
+  } catch (error) {
+    // add error handler
+    res.status(500).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
+  }
+}
 
 class Forecast {
   constructor(obj) {
@@ -41,5 +50,5 @@ class Forecast {
   }
 }
 
-module.exports = getWeatherData;
+module.exports = weatherReqHandler;
 

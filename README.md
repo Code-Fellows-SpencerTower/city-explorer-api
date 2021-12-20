@@ -13,7 +13,7 @@ Express server to query weather data from Weatherbit
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
-Technologies: Javascript, express, weatherbit API
+Technologies: Javascript, express, weatherbit API, movies db API, 
 
 ## Change Log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
@@ -24,6 +24,7 @@ Technologies: Javascript, express, weatherbit API
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 Jacob Choi
 Kellen Linse
+
 
 ## Lab 07
 
@@ -67,7 +68,6 @@ Finish time: _____
 
 Actual time needed to complete: 
 
-## Lab 09
 
 ## Lab 10
 
@@ -81,4 +81,4 @@ Start time: _____
 
 Finish time: _____
 
-Actual time needed to complete: _____
+Actual time needed to complete: 2.5hrs
