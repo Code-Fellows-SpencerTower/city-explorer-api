@@ -8,8 +8,8 @@ const cors = require('cors');
 const app = express(); // gives back return value
 app.use(cors()); // acts as middleware - intermediary between server and requests
 // import getWeatherData() from weather.js
-const getWeatherData = require('./routeHandlers/weather');
-const getMovieData = require('./routeHandlers/movies');
+const weatherReqHandler = require('./routeHandlers/weather');
+const movieReqHandler = require('./routeHandlers/movies');
 
 // open route for weather
 app.get('/weather', weatherReqHandler);
@@ -19,34 +19,3 @@ app.get('/movies', movieReqHandler);
 app.get('/*', (req, res) => res.status(404).send('Route Not Found'));
 // turn on server
 app.listen(process.env.PORT, () => console.log(`server is listening on ${process.env.PORT}`));
-
-
-// handle req from client, pass to weather.js, send res to client
-async function weatherReqHandler(req, res) {
-  try {
-    // assign lat lon from query to variables
-    const { lat, lon } = req.query;
-    // pass lat and lon into getWeather() in weather.js to get data from cache or new axios request
-    const weatherData = await getWeatherData(lat, lon);
-    console.log('weatherData: ', weatherData);
-    res.status(200).send(weatherData);
-  } catch (error) {
-    // add error handler
-    res.status(500).send(`There was an error retrieving weather data for ${req.query.city_name}.`);
-  }
-}
-
-// handle req from client, pass to movies.js, send res to client
-async function movieReqHandler(req, res) {
-  try {
-    // assign lat lon from query to variables
-    const { city_name } = req.query;
-    // pass lat and lon into getWeather() in weather.js to get data from cache or new axios request
-    const movieData = await getMovieData(city_name);
-    console.log('movieData: ', movieData);
-    res.status(200).send(movieData);
-  } catch (error) {
-    // add error handler
-    res.status(500).send(`There was an error retrieving movie data for ${req.query.city_name}.`);
-  }
-}
